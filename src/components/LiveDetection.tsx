@@ -1,6 +1,7 @@
 import React from 'react';
 import { FaceLivenessDetector } from '@aws-amplify/ui-react-liveness';
 import { Loader, ThemeProvider } from '@aws-amplify/ui-react';
+import axios from 'axios';
 
 export function LivenessQuickStartReact() {
   const [loading, setLoading] = React.useState<boolean>(true);
@@ -13,8 +14,9 @@ export function LivenessQuickStartReact() {
       /*
        * This should be replaced with a real call to your own backend API
        */
-      await new Promise((r) => setTimeout(r, 2000));
-      const mockResponse = { sessionId: 'mockSessionId' };
+         const response = await axios.post("http://192.168.1.4:3000/start-liveness");
+      const newSessionId = response.data.sessionId;
+      const mockResponse = { sessionId: newSessionId };
       const data = mockResponse;
 
       setCreateLivenessApiData(data);
@@ -28,10 +30,11 @@ export function LivenessQuickStartReact() {
     /*
      * This should be replaced with a real call to your own backend API
      */
-    const response = await fetch(
-      `/api/get?sessionId=${createLivenessApiData?.sessionId}`
-    );
-    const data = await response.json();
+    const response = await axios.get(
+      `http://192.168.1.4:3000/get-liveness-session/${createLivenessApiData?.sessionId}`
+  );
+  const confidence = response.data.confidence;
+    
 
     /*
      * Note: The isLive flag is not returned from the GetFaceLivenessSession API
@@ -40,7 +43,7 @@ export function LivenessQuickStartReact() {
      * Any next steps from an authorization perspective should happen in your backend and you should not rely
      * on this value for any auth related decisions.
      */
-    if (data.isLive) {
+    if (confidence.isLive) {
       console.log('User is live');
     } else {
       console.log('User is not live');
@@ -54,7 +57,7 @@ export function LivenessQuickStartReact() {
       ) : (
         <FaceLivenessDetector
           sessionId={createLivenessApiData?.sessionId || ''}
-          region="us-east-1"
+          region="ap-northeast-1"
           onAnalysisComplete={handleAnalysisComplete}
           onError={(error) => {
             console.error(error);
