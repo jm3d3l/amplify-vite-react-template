@@ -10,7 +10,8 @@ export function LivenessQuickStartReact() {
     sessionId: string;
   } | null>(null);
 
-  const APIURL = 'https://aws-face-liveness-api.onrender.com';
+  // const APIURL = 'https://aws-face-liveness-api.onrender.com';
+const APIURL = 'https://aws-face-recognation.vercel.app';
 // const APIURL = 'http://localhost:3000';
   React.useEffect(() => {
     const fetchCreateLiveness: () => Promise<void> = async () => {
