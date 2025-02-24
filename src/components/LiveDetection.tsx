@@ -1,7 +1,7 @@
-import React from 'react';
-import { FaceLivenessDetector } from '@aws-amplify/ui-react-liveness';
 import { Loader, ThemeProvider } from '@aws-amplify/ui-react';
+import { FaceLivenessDetector } from '@aws-amplify/ui-react-liveness';
 import axios from 'axios';
+import React from 'react';
 
 
 export function LivenessQuickStartReact() {
@@ -10,12 +10,14 @@ export function LivenessQuickStartReact() {
     sessionId: string;
   } | null>(null);
 
+  const APIURL = 'https://aws-face-liveness-api.onrender.com';
+// const APIURL = 'http://localhost:3000';
   React.useEffect(() => {
     const fetchCreateLiveness: () => Promise<void> = async () => {
       /*
        * This should be replaced with a real call to your own backend API
        */
-         const response = await axios.post("https://aws-face-liveness-api.onrender.com/start-liveness");
+         const response = await axios.post(`${APIURL}/start-liveness`);
       const newSessionId = response.data.sessionId;
       const mockResponse = { sessionId: newSessionId };
       const data = mockResponse;
@@ -28,16 +30,20 @@ export function LivenessQuickStartReact() {
   }, []);
 
   const handleAnalysisComplete: () => Promise<void> = async () => {
-    /*
+    /* . 
      * This should be replaced with a real call to your own backend API
      */
     const response = await axios.get(
-      `https://aws-face-liveness-api.onrender.com/get-liveness-session/${createLivenessApiData?.sessionId}`
+      `${APIURL}/get-liveness-session/${createLivenessApiData?.sessionId}`
   );
   const confidence = response.data.confidence;
     
 console.log('confidence.........', response)
+setCreateLivenessApiData(null)
     if (confidence >= 85) {
+      if (window?.ReactNativeWebView) {
+        window.ReactNativeWebView.postMessage("LIVENESS_SUCCESS");
+    }
       console.log('User is live');
     } else {
       console.log('User is not live');
