@@ -42,10 +42,19 @@ console.log('confidence.........', response)
 setCreateLivenessApiData(null)
     if (confidence >= 85) {
       if (window?.ReactNativeWebView) {
-        window.ReactNativeWebView.postMessage("LIVENESS_SUCCESS");
+        window.ReactNativeWebView.postMessage(
+          JSON.stringify({
+              status: "LIVENESS_SUCCESS",
+              selfieName: response.data?.selfieName,
+          })
+      );
     }
+    
       console.log('User is live');
     } else {
+      if (window?.ReactNativeWebView) {
+        window.ReactNativeWebView.postMessage("LIVENESS_FAIL");
+    }
       console.log('User is not live');
     }
   };
