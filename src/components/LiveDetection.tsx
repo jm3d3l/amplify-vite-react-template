@@ -41,7 +41,7 @@ const APIURL = 'https://aws-face-recognation.vercel.app';
     
 console.log('confidence.........', response)
 setCreateLivenessApiData(null)
-    if (confidence >= 85) {
+    if (confidence >= 90) {
       if (window?.ReactNativeWebView) {
         window.ReactNativeWebView.postMessage(
           JSON.stringify({
