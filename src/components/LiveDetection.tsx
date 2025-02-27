@@ -29,6 +29,7 @@ export function LivenessQuickStartReact() {
         fetchCreateLiveness();
     }, []);
 
+    const ErrorNull = () => null;
     const handleAnalysisComplete = async () => {
         if (!createLivenessApiData?.sessionId) return;
 
@@ -65,7 +66,12 @@ export function LivenessQuickStartReact() {
                     region="ap-northeast-1"
                     onAnalysisComplete={handleAnalysisComplete}
                     onError={(error) => {
-                        console.error(error);
+                        if (error.state === "TIMEOUT") {
+                            window?.ReactNativeWebView?.postMessage("SCAN_TIMEOUT");
+                        }
+                    }}
+                    components={{
+                        ErrorView: ErrorNull,
                     }}
                 />
             )}
