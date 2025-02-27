@@ -39,9 +39,14 @@ export function LivenessQuickStartReact() {
             );
             console.log("Liveness analysis result:", data);
 
-            if (data.status === "FAILED" || data.confidence < 98) {
+            if (data.status === "FAILED") {
                 window?.ReactNativeWebView?.postMessage("LIVENESS_FAIL");
-                console.log("User is not live");
+                return;
+            }
+
+            if (data.confidence < 98) {
+                window?.ReactNativeWebView?.postMessage("SPOOF_DETECTED");
+                console.log("Spoof Detected");
                 return;
             }
 
